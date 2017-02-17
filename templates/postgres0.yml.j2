@@ -5,17 +5,14 @@ restapi:
   listen: 0.0.0.0:8008
   connect_address: {{ ansible_default_ipv4.address }}:8008
   auth: 'username:{{ patroni_rest_password }}'
-etcd:
-  scope: *scope
-  ttl: *ttl
-  host: 127.0.0.1:4001
-  #discovery_srv: my-etcd.domain
+consul:
+  host: consul.services.local:8500
 postgresql:
   name: {{ patroni_node_name }}
   scope: *scope
   listen: 0.0.0.0:5432
   connect_address: {{ ansible_default_ipv4.address }}:5432
-  data_dir: data/{{ patroni_node_name }}
+  data_dir: /var/lib/pgsql/9.6/data
   maximum_lag_on_failover: 1048576 # 1 megabyte in bytes
   use_slots: True
   pg_rewind:
@@ -27,13 +24,13 @@ postgresql:
   replication:
     username: replicator
     password: {{ patroni_replicator_password }}
-    network:  136.243.76.0/24
+    network:  192.168.0.0/16
   superuser:
     username: superuser
     password: {{ patroni_postgres_password }}
   admin:
     username: admin
-    password: {{ patroni_admin_password }}
+    password: {{ patroni_postgres_password }}
 #  wal_e:
 #    env_dir: /home/postgres/etc/wal-e.d/env
 #    threshold_megabytes: 10240

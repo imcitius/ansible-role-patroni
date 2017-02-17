@@ -1,45 +1,4 @@
----
-- name: checkout patroni
-  git: repo=https://github.com/gitinsky/patroni.git dest=/opt/patroni
 
-- name: create /etc/patroni
-  file: state=directory dest=/etc/patroni
-
-- name: put postgres.yml
-  template: src=postgres0.yml dest=/etc/patroni/postgres.yml backup=yes
-
-- name: install python-etcd
-  pip: name=python-etcd
-
-- name: install dnspython
-  pip: name=dnspython
-
-- name: install boto
-  pip: name=boto
-
-- name: install mock
-  pip: name=mock
-
-- name: install psycopg2
-  pip: name=psycopg2
-
-- name: install PyYAML
-  pip: name=PyYAML
-
-- name: install requests
-  pip: name=requests
-
-- name: install six
-  pip: name=six
-
-- name: install kazoo
-  pip: name=kazoo
-
-- name: put patroni.sh
-  template: src=patroni.sh dest=/var/lib/postgresql/patroni.sh mode=0755 backup=yes
-
-- name: put patroni.rb
-  template: src=patroni.rb dest=/etc/eye/patroni.rb backup=yes
-
-- name: reload eye
-  command: bash -c "source /usr/local/rvm/scripts/rvm && eye l /etc/eye/apps.eye"
+- include: postgres.yml
+- include: haproxy.yml
+- include: keepalived.yml
